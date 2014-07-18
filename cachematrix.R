@@ -1,15 +1,29 @@
-## Put comments here that give an overall description of what your
-## functions do
+# Reduce repeating matrix solve computation with followng code:
+#
+#  m <- makeCacheMatrix(matrix( c(4,3,3,2), nrow=2 ))
+#  cacheSolve(m)
+#
+#  m$get() is original matrix. 
 
-## Write a short comment describing this function
-
+# Create an object which hold matrix and inverted cache of it.  
 makeCacheMatrix <- function(x = matrix()) {
-
+    cached_solve <- NULL
+    set <- function(y) {
+      x <<- y
+      cached_solve <<- NULL
+    }
+    get <- function() x
+    setsolve <- function(v) cached_solve <<- v
+    getsolve <- function() cached_solve
+    list(set = set, get = get,
+         setsolve = setsolve,
+         getsolve = getsolve)
 }
 
-
-## Write a short comment describing this function
-
+#Cache result of solve in the makeCacheMatrix object, return solve version of the matrix.
 cacheSolve <- function(x, ...) {
-        ## Return a matrix that is the inverse of 'x'
+  if (is.null(x$getsolve()))
+    x$setsolve( solve(x$get()) )
+    
+  x$getsolve()
 }
